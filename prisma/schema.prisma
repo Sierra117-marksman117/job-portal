@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  passwordHash String
+  name         String
+  role         String        // "CANDIDATE" | "RECRUITER" | "ADMIN"
+  title        String?
+  bio          String?
+  skills       String        // Stored as JSON string or comma-separated list
+  experience   Float?
+  location     String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  companyId    String?
+  company      Company?      @relation(fields: [companyId], references: [id])
+  applications Application[]
+}
+
+model Company {
+  id        String   @id @default(cuid())
+  name      String
+  location  String
+  gstin     String?
+  verified  Boolean  @default(false)
+  logo      String?
+  createdAt DateTime @default(now())
+
+  users     User[]
+  jobs      Job[]
+}
+
+model Job {
+  id              String        @id @default(cuid())
+  title           String
+  description     String
+  companyId       String
+  company         Company       @relation(fields: [companyId], references: [id])
+  location        String
+  ctcMin          Float         // in LPA (e.g. 22.0)
+  ctcMax          Float         // in LPA (e.g. 28.0)
+  requiredSkills  String        // Stored as JSON string or comma-separated list
+  experienceYears String        // e.g. "3-6 Yrs"
+  status          String        @default("ACTIVE") // "ACTIVE" | "CLOSED"
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  applications    Application[]
+}
+
+model Application {
+  id          String   @id @default(cuid())
+  jobId       String
+  job         Job      @relation(fields: [jobId], references: [id])
+  candidateId String
+  candidate   User     @relation(fields: [candidateId], references: [id])
+  status      String   @default("APPLIED") // "APPLIED" | "SHORTLISTED" | "INTERVIEW_SCHEDULED" | "REJECTED"
+  matchScore  Int
+  appliedAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  eventType String   // "AUTH", "APPLICATION", "ROLE_SWITCH", "MATCH_CALC", "KYC_APPROVAL"
+  message   String
+  metadata  String?
+  timestamp DateTime @default(now())
+}
