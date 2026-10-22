@@ -4,12 +4,18 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run lint && next build",
+    "build": "next telemetry disable && npm run lint && next build",
     "start": "next start",
-    "lint": "eslint --max-warnings 0"
+    "lint": "eslint --max-warnings 0",
+    "db:seed": "tsx prisma/seed.ts",
+    "postinstall": "prisma generate"
   },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
+  "allowScripts": {
+    "@prisma/client": true,
+    "@prisma/engines": true,
+    "esbuild": true,
+    "prisma": true,
+    "unrs-resolver": true
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
@@ -25,7 +31,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
+    "eslint": "^10.13.0",
     "eslint-config-next": "16.4.2",
     "prisma": "^6.19.3",
     "tailwindcss": "^4",
