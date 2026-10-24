@@ -85,10 +85,10 @@ export function SkillMatrix({ job, candidateName, onAddSkill }: SkillMatrixProps
                 <button
                   type="button"
                   onClick={() => onAddSkill(skill)}
-                  className="text-[11px] font-bold text-[#0a66c2] hover:text-blue-800 ml-0.5 flex items-center"
+                  className="text-xs font-bold text-[#0a66c2] hover:text-blue-800 ml-0.5 inline-flex items-center gap-0.5 min-h-[40px] px-2.5 py-1.5 rounded-md hover:bg-blue-50 transition-colors"
                   title={`Add ${skill} to candidate profile`}
                 >
-                  <Plus className="w-3 h-3" />
+                  <Plus className="w-3.5 h-3.5" />
                   <span>Add</span>
                 </button>
               )}

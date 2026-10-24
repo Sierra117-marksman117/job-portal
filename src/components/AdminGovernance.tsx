@@ -303,13 +303,13 @@ export function AdminGovernance({ initialCompanies, initialAuditLogs, stats }: A
                     <>
                       <button
                         onClick={() => handleKycToggle(company.id, company.name, true)}
-                        className="btn-press px-3.5 py-1.5 min-h-[36px] bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold"
+                        className="btn-press px-3.5 py-1.5 min-h-[40px] bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg font-bold flex items-center justify-center"
                       >
                         Approve KYC
                       </button>
                       <button
                         onClick={() => handleKycToggle(company.id, company.name, false)}
-                        className="btn-press px-3.5 py-1.5 min-h-[36px] bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-semibold"
+                        className="btn-press px-3.5 py-1.5 min-h-[40px] bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-semibold flex items-center justify-center"
                       >
                         Reject
                       </button>
@@ -317,7 +317,7 @@ export function AdminGovernance({ initialCompanies, initialAuditLogs, stats }: A
                   ) : (
                     <button
                       onClick={() => handleKycToggle(company.id, company.name, false)}
-                      className="btn-press px-3.5 py-1.5 min-h-[36px] bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg font-medium"
+                      className="btn-press px-3.5 py-1.5 min-h-[40px] bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg font-medium flex items-center justify-center"
                     >
                       Revoke Verification
                     </button>

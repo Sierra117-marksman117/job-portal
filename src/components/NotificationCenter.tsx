@@ -88,7 +88,7 @@ export function NotificationCenter() {
         id="btn-notifications-trigger"
         onClick={() => setIsOpen(!isOpen)}
         aria-label={`Notifications (${unreadCount} unread)`}
-        className="btn-press relative p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors flex items-center justify-center min-h-[36px] min-w-[36px]"
+        className="btn-press relative p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors flex items-center justify-center min-h-[40px] min-w-[40px]"
       >
         <Bell className="w-4 h-4 text-slate-700" />
         {unreadCount > 0 && (

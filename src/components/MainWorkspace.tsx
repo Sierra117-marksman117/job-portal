@@ -426,28 +426,30 @@ export function MainWorkspace({
                 <div className="bg-white border-b border-slate-200 px-4 sm:px-6 py-3.5 shadow-2xs shrink-0">
                   <div className="max-w-6xl mx-auto space-y-2.5">
                     
-                    {/* Unified 3-Box Search Bar */}
-                    <div className="flex flex-col md:flex-row items-stretch border border-slate-300 rounded-xl overflow-hidden shadow-2xs bg-white divide-y md:divide-y-0 md:divide-x divide-slate-200">
+                    {/* Unified 3-Box Search Bar (Responsive: stacks gracefully on mobile & tablet) */}
+                    <div className="flex flex-col lg:flex-row items-stretch border border-slate-300 rounded-xl overflow-hidden shadow-2xs bg-white divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
                       
                       {/* Input 1: Keywords */}
-                      <div className="flex-1 flex items-center px-3.5 py-2.5 bg-white">
+                      <div className="flex-1 flex items-center px-3.5 py-1 min-h-[44px] bg-white">
                         <Search className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
                         <input
                           type="text"
+                          aria-label="Search skills, designations, or companies"
                           placeholder="Search skills, designations, companies (e.g. Java 21, Spring Boot, SRE)..."
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
-                          className="w-full text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none bg-transparent"
+                          className="w-full text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none bg-transparent py-1 min-h-[40px]"
                         />
                       </div>
 
                       {/* Input 2: Location */}
-                      <div className="flex items-center px-3.5 py-2.5 bg-white min-w-[200px]">
+                      <div className="flex items-center px-3.5 py-1 min-h-[44px] bg-white w-full lg:w-auto lg:min-w-[200px]">
                         <MapPin className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
                         <select
+                          aria-label="Filter by location"
                           value={locationFilter}
                           onChange={(e) => setLocationFilter(e.target.value)}
-                          className="w-full text-xs text-slate-800 font-medium focus:outline-none bg-transparent cursor-pointer"
+                          className="w-full text-xs text-slate-800 font-medium focus:outline-none bg-transparent cursor-pointer py-1 min-h-[40px]"
                         >
                           <option value="ALL">All Locations (India)</option>
                           <option value="Bengaluru">Bengaluru</option>
@@ -458,12 +460,13 @@ export function MainWorkspace({
                       </div>
 
                       {/* Input 3: Experience */}
-                      <div className="flex items-center px-3.5 py-2.5 bg-white min-w-[180px]">
+                      <div className="flex items-center px-3.5 py-1 min-h-[44px] bg-white w-full lg:w-auto lg:min-w-[180px]">
                         <Briefcase className="w-4 h-4 text-slate-400 mr-2 shrink-0" />
                         <select
+                          aria-label="Filter by experience"
                           value={experienceFilter}
                           onChange={(e) => setExperienceFilter(e.target.value)}
-                          className="w-full text-xs text-slate-800 font-medium focus:outline-none bg-transparent cursor-pointer"
+                          className="w-full text-xs text-slate-800 font-medium focus:outline-none bg-transparent cursor-pointer py-1 min-h-[40px]"
                         >
                           <option value="ALL">Any Experience</option>
                           <option value="1-3">1 - 3 Years</option>
@@ -475,7 +478,7 @@ export function MainWorkspace({
                       {/* Search Action CTA */}
                       <button
                         type="button"
-                        className="btn-press px-6 py-2.5 bg-[#0a66c2] hover:bg-blue-700 text-white font-bold text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5 shrink-0"
+                        className="btn-press px-6 py-2.5 min-h-[44px] bg-[#0a66c2] hover:bg-blue-700 text-white font-bold text-xs sm:text-sm transition-colors flex items-center justify-center gap-1.5 shrink-0"
                       >
                         <span>Search Jobs</span>
                       </button>
@@ -485,13 +488,13 @@ export function MainWorkspace({
                     <div className="flex flex-wrap items-center justify-between gap-2 text-xs pt-1">
                       <div className="flex flex-wrap items-center gap-1.5">
                         <span className="text-[11px] text-slate-400 font-medium flex items-center gap-1 mr-1">
-                          <SlidersHorizontal className="w-3 h-3" />
+                          <SlidersHorizontal className="w-3.5 h-3.5" />
                           <span>Filters:</span>
                         </span>
 
                         <button
                           onClick={() => setHighMatchOnly(!highMatchOnly)}
-                          className={`btn-press px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-colors ${
+                          className={`btn-press min-h-[40px] px-3.5 py-1.5 rounded-full text-xs font-semibold border inline-flex items-center justify-center transition-colors ${
                             highMatchOnly
                               ? 'bg-emerald-50 border-emerald-300 text-emerald-800'
                               : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
@@ -502,7 +505,7 @@ export function MainWorkspace({
 
                         <button
                           onClick={() => setMinCtcFilter(minCtcFilter === 24 ? 0 : 24)}
-                          className={`btn-press px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-colors ${
+                          className={`btn-press min-h-[40px] px-3.5 py-1.5 rounded-full text-xs font-semibold border inline-flex items-center justify-center transition-colors ${
                             minCtcFilter === 24
                               ? 'bg-blue-50 border-blue-300 text-[#0a66c2]'
                               : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
@@ -513,7 +516,7 @@ export function MainWorkspace({
 
                         <button
                           onClick={() => setLocationFilter(locationFilter === 'Bengaluru' ? 'ALL' : 'Bengaluru')}
-                          className={`btn-press px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-colors ${
+                          className={`btn-press min-h-[40px] px-3.5 py-1.5 rounded-full text-xs font-semibold border inline-flex items-center justify-center transition-colors ${
                             locationFilter === 'Bengaluru'
                               ? 'bg-blue-50 border-blue-300 text-[#0a66c2]'
                               : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
@@ -524,13 +527,13 @@ export function MainWorkspace({
 
                         <button
                           onClick={() => setActiveNavTab(activeNavTab === 'SAVED' ? 'DISCOVER' : 'SAVED')}
-                          className={`btn-press px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-colors flex items-center gap-1 ${
+                          className={`btn-press min-h-[40px] px-3.5 py-1.5 rounded-full text-xs font-semibold border inline-flex items-center justify-center gap-1.5 transition-colors ${
                             activeNavTab === 'SAVED'
                               ? 'bg-slate-900 border-slate-900 text-white'
                               : 'bg-white border-slate-200 text-slate-600 hover:border-slate-300'
                           }`}
                         >
-                          <Bookmark className="w-3 h-3" />
+                          <Bookmark className="w-3.5 h-3.5" />
                           <span>Saved ({bookmarkedJobIds.size})</span>
                         </button>
                       </div>
@@ -625,7 +628,7 @@ export function MainWorkspace({
                             <button
                               type="button"
                               onClick={() => handleToggleBookmark(activeJob.id, activeJob.title)}
-                              className="p-2 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors shrink-0 border border-slate-200"
+                              className="min-w-[40px] min-h-[40px] flex items-center justify-center p-2 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors shrink-0 border border-slate-200"
                               aria-label="Bookmark this role"
                             >
                               {bookmarkedJobIds.has(activeJob.id) ? (

@@ -100,7 +100,7 @@ export function JobCard({
               e.stopPropagation();
               onToggleBookmark();
             }}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors shrink-0"
+            className="min-w-[40px] min-h-[40px] flex items-center justify-center p-2 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors shrink-0"
             aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark job'}
           >
             {isBookmarked ? (

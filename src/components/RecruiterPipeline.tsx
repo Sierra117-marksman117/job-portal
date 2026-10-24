@@ -144,13 +144,13 @@ export function RecruiterPipeline({
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs">
         {/* Search */}
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
           <input
             type="text"
             placeholder="Search candidates by name, job, or tech skills..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-slate-500"
+            className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-2 min-h-[40px] text-xs text-slate-900 focus:outline-none focus:border-slate-500"
           />
         </div>
 
@@ -167,7 +167,7 @@ export function RecruiterPipeline({
             <button
               key={f.id}
               onClick={() => setActiveFilter(f.id)}
-              className={`px-3 py-1.5 rounded-lg font-medium transition-colors whitespace-nowrap text-xs ${
+              className={`px-3 py-1.5 rounded-lg font-medium transition-colors whitespace-nowrap text-xs min-h-[38px] flex items-center justify-center ${
                 activeFilter === f.id
                   ? 'bg-slate-900 text-white font-bold'
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
@@ -297,7 +297,7 @@ export function RecruiterPipeline({
                     <button
                       onClick={() => handleStatusChange(app.id, app.candidate.name, 'SHORTLISTED')}
                       disabled={app.status === 'SHORTLISTED'}
-                      className={`btn-press px-3.5 py-1.5 min-h-[36px] rounded-lg font-semibold flex items-center gap-1 transition-colors ${
+                      className={`btn-press px-3.5 py-1.5 min-h-[40px] rounded-lg font-semibold flex items-center gap-1 transition-colors ${
                         app.status === 'SHORTLISTED'
                           ? 'bg-blue-100 text-blue-800 cursor-default'
                           : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 shadow-2xs'
@@ -309,7 +309,7 @@ export function RecruiterPipeline({
 
                     <button
                       onClick={() => setSelectedAppForInterview(app)}
-                      className="btn-press px-3.5 py-1.5 min-h-[36px] rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center gap-1.5 shadow-xs"
+                      className="btn-press px-3.5 py-1.5 min-h-[40px] rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center gap-1.5 shadow-xs"
                     >
                       <Calendar className="w-3.5 h-3.5 text-white" />
                       <span>{app.status === 'INTERVIEW_SCHEDULED' ? 'Reschedule Interview' : 'Schedule Interview'}</span>
@@ -318,7 +318,7 @@ export function RecruiterPipeline({
                     <button
                       onClick={() => handleStatusChange(app.id, app.candidate.name, 'REJECTED')}
                       disabled={app.status === 'REJECTED'}
-                      className={`btn-press px-3 py-1.5 min-h-[36px] rounded-lg text-slate-500 hover:text-rose-700 hover:bg-rose-50 transition-colors font-medium flex items-center gap-1 ${
+                      className={`btn-press px-3 py-1.5 min-h-[40px] rounded-lg text-slate-500 hover:text-rose-700 hover:bg-rose-50 transition-colors font-medium flex items-center gap-1 ${
                         app.status === 'REJECTED' ? 'text-rose-600 bg-rose-50 cursor-default' : ''
                       }`}
                     >
