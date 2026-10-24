@@ -58,15 +58,19 @@ model Job {
 }
 
 model Application {
-  id          String   @id @default(cuid())
-  jobId       String
-  job         Job      @relation(fields: [jobId], references: [id])
-  candidateId String
-  candidate   User     @relation(fields: [candidateId], references: [id])
-  status      String   @default("APPLIED") // "APPLIED" | "SHORTLISTED" | "INTERVIEW_SCHEDULED" | "REJECTED"
-  matchScore  Int
-  appliedAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id              String    @id @default(cuid())
+  jobId           String
+  job             Job       @relation(fields: [jobId], references: [id])
+  candidateId     String
+  candidate       User      @relation(fields: [candidateId], references: [id])
+  status          String    @default("APPLIED") // "APPLIED" | "SHORTLISTED" | "INTERVIEW_SCHEDULED" | "REJECTED"
+  matchScore      Int
+  appliedAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  interviewDate   String?
+  interviewSlot   String?
+  interviewRound  String?
+  interviewLink   String?
 }
 
 model AuditLog {

@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { FileText, UserPlus } from 'lucide-react';
+import { FileText, UserPlus, GraduationCap, UserCheck } from 'lucide-react';
+import { NotificationCenter } from './NotificationCenter';
 
 export type Role = 'CANDIDATE' | 'RECRUITER' | 'ADMIN';
 
@@ -10,9 +11,13 @@ interface NavbarProps {
   onRoleChange: (role: Role) => void;
   onOpenResume: () => void;
   onOpenRegister: () => void;
+  onOpenProfile?: () => void;
+  onOpenViva?: () => void;
   customCandidateName?: string;
   customRecruiterName?: string;
   customAdminName?: string;
+  activeNavTab?: string;
+  onNavTabChange?: (tab: string) => void;
 }
 
 export function Navbar({
@@ -20,9 +25,13 @@ export function Navbar({
   onRoleChange,
   onOpenResume,
   onOpenRegister,
+  onOpenProfile,
+  onOpenViva,
   customCandidateName,
   customRecruiterName,
   customAdminName,
+  activeNavTab = 'DISCOVER',
+  onNavTabChange,
 }: NavbarProps) {
   const seekerLabel = customCandidateName ? customCandidateName.split(' ')[0] : 'Rohan';
   const recruiterLabel = customRecruiterName ? customRecruiterName.split(' ')[0] : 'Neha';
@@ -40,57 +49,74 @@ export function Navbar({
             </div>
             <div>
               <span className="font-bold text-slate-900 text-xs sm:text-sm tracking-tight block">TalentGrid India</span>
-              <span className="text-[10px] text-slate-500 block -mt-0.5">Engineering Careers</span>
+              <span className="text-[10px] text-slate-500 block -mt-0.5">Recruitment Architecture</span>
             </div>
           </div>
 
-          {/* Mobile Right Controls: Register + CV */}
-          <div className="flex sm:hidden items-center gap-1.5 shrink-0">
+          {/* College Viva Button (Tarun's Academic Project Rubric Flex) */}
+          {onOpenViva && (
             <button
-              id="btn-open-register-mobile"
-              onClick={onOpenRegister}
-              className="btn-press flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-slate-900 text-white text-[11px] font-bold shadow-xs min-h-[36px]"
+              onClick={onOpenViva}
+              className="btn-press flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-[11px] font-bold shadow-2xs transition-colors shrink-0"
+              title="Open Academic Viva Dossier & Architecture Class Diagram"
             >
-              <UserPlus className="w-3 h-3" />
-              <span>Register</span>
+              <GraduationCap className="w-3.5 h-3.5 text-emerald-700" />
+              <span>Viva & OOPs Guide</span>
             </button>
-            <button
-              id="btn-open-resume-mobile"
-              onClick={onOpenResume}
-              className="btn-press flex items-center gap-1 px-2 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-[11px] font-semibold border border-slate-300 min-h-[36px]"
-            >
-              <FileText className="w-3 h-3" />
-              <span>CV</span>
-            </button>
-          </div>
+          )}
 
+          {/* Navigation Tabs per Role */}
           <nav className="hidden lg:flex items-center gap-1 pl-4 border-l border-slate-200 text-xs font-medium text-slate-600">
-            {currentRole === 'CANDIDATE' && (
+            {currentRole === 'CANDIDATE' && onNavTabChange && (
               <>
-                <button className="px-2.5 py-1 text-slate-900 font-semibold rounded-md">Find Openings</button>
-                <button className="px-2.5 py-1 text-slate-600 hover:text-slate-900 rounded-md transition-colors">Applications (1)</button>
-                <button className="px-2.5 py-1 text-slate-600 hover:text-slate-900 rounded-md transition-colors">Saved (2)</button>
+                <button
+                  onClick={() => onNavTabChange('DISCOVER')}
+                  className={`px-2.5 py-1 rounded-md transition-colors ${
+                    activeNavTab === 'DISCOVER'
+                      ? 'text-slate-900 font-bold bg-slate-100'
+                      : 'hover:text-slate-900'
+                  }`}
+                >
+                  Find Openings
+                </button>
+                <button
+                  onClick={() => onNavTabChange('APPLICATIONS')}
+                  className={`px-2.5 py-1 rounded-md transition-colors ${
+                    activeNavTab === 'APPLICATIONS'
+                      ? 'text-slate-900 font-bold bg-slate-100'
+                      : 'hover:text-slate-900'
+                  }`}
+                >
+                  My Applications
+                </button>
+                <button
+                  onClick={() => onNavTabChange('SAVED')}
+                  className={`px-2.5 py-1 rounded-md transition-colors ${
+                    activeNavTab === 'SAVED'
+                      ? 'text-slate-900 font-bold bg-slate-100'
+                      : 'hover:text-slate-900'
+                  }`}
+                >
+                  Saved Jobs
+                </button>
               </>
             )}
             {currentRole === 'RECRUITER' && (
-              <>
-                <button className="px-2.5 py-1 text-slate-900 font-semibold rounded-md">Active Postings (3)</button>
-                <button className="px-2.5 py-1 text-slate-600 hover:text-slate-900 rounded-md transition-colors">Pipeline (14)</button>
-                <button className="px-2.5 py-1 text-slate-600 hover:text-slate-900 rounded-md transition-colors">Interviews (2)</button>
-              </>
+              <span className="text-slate-400 text-xs pl-2">
+                Requisitions & Candidate Pipeline Active
+              </span>
             )}
             {currentRole === 'ADMIN' && (
-              <>
-                <button className="px-2.5 py-1 text-slate-900 font-semibold rounded-md">Recruiter Approvals (2)</button>
-                <button className="px-2.5 py-1 text-slate-600 hover:text-slate-900 rounded-md transition-colors">User Accounts</button>
-                <button className="px-2.5 py-1 text-slate-600 hover:text-slate-900 rounded-md transition-colors">Audit Logs</button>
-              </>
+              <span className="text-slate-400 text-xs pl-2">
+                Super Admin Governance & Audit Active
+              </span>
             )}
           </nav>
         </div>
 
         {/* PERSONA SWITCHER & ACTIONS: RESPONSIVE CONTROLS */}
         <div className="w-full sm:w-auto flex items-center justify-between sm:justify-end gap-1.5 sm:gap-2">
+          {/* Persona Switcher Tabs */}
           <div className="w-full sm:w-auto flex items-center justify-center p-1 rounded-xl bg-slate-100 border border-slate-200/80 text-xs">
             <span className="hidden xl:inline text-slate-500 text-[11px] px-2 font-medium select-none">
               Viewing as:
@@ -139,6 +165,22 @@ export function Navbar({
             </button>
           </div>
 
+          {/* Notification Center */}
+          <NotificationCenter />
+
+          {/* Edit Profile (Candidate Only) */}
+          {currentRole === 'CANDIDATE' && onOpenProfile && (
+            <button
+              id="btn-open-profile"
+              onClick={onOpenProfile}
+              className="btn-press flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold border border-slate-300 shadow-2xs shrink-0 min-h-[34px]"
+              title="Edit Profile, Skills & Resume"
+            >
+              <UserCheck className="w-3.5 h-3.5 text-blue-600" />
+              <span className="hidden sm:inline">Profile</span>
+            </button>
+          )}
+
           {/* Desktop Right Buttons: Register + Verified CV */}
           <button
             id="btn-open-register"
@@ -155,7 +197,7 @@ export function Navbar({
             className="hidden sm:flex btn-press items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold border border-slate-300 shadow-2xs shrink-0 min-h-[34px]"
           >
             <FileText className="w-3.5 h-3.5" />
-            <span>Verified CV</span>
+            <span>CV</span>
           </button>
         </div>
 

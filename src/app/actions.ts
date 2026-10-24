@@ -119,6 +119,10 @@ const FALLBACK_APPLICATIONS = [
     status: 'INTERVIEW_SCHEDULED',
     matchScore: 78,
     appliedAt: new Date(Date.now() - 3600000 * 24).toISOString(),
+    interviewDate: '2026-10-28',
+    interviewSlot: '11:00 AM - 11:45 AM IST',
+    interviewRound: 'Technical Round 1: Distributed Systems',
+    interviewLink: 'https://meet.google.com/tg-finwave-eng',
     candidate: {
       id: 'user-amitabh',
       name: 'Amitabh Sen',
@@ -609,3 +613,170 @@ export async function registerUser(input: RegisterInput) {
     };
   }
 }
+
+export interface CreateJobInput {
+  title: string;
+  description: string;
+  location: string;
+  ctcMin: number;
+  ctcMax: number;
+  experienceYears: string;
+  requiredSkills: string[];
+  companyName?: string;
+}
+
+export async function createJobRequisition(input: CreateJobInput) {
+  try {
+    let company = await prisma.company.findFirst();
+    if (!company) {
+      company = await prisma.company.create({
+        data: {
+          name: input.companyName || 'FinWave Technologies',
+          location: input.location || 'Bengaluru, Karnataka',
+          gstin: '29AABCF9999F1Z0',
+          verified: true,
+          logo: (input.companyName || 'FinWave').slice(0, 2).toUpperCase(),
+        },
+      });
+    }
+
+    const newJob = await prisma.job.create({
+      data: {
+        title: input.title,
+        description: input.description,
+        location: input.location,
+        ctcMin: input.ctcMin,
+        ctcMax: input.ctcMax,
+        experienceYears: input.experienceYears,
+        requiredSkills: JSON.stringify(input.requiredSkills),
+        status: 'ACTIVE',
+        companyId: company.id,
+      },
+      include: {
+        company: true,
+        applications: true,
+      },
+    });
+
+    try {
+      await prisma.auditLog.create({
+        data: {
+          eventType: 'JOB_POST',
+          message: `New requisition posted: [${newJob.title}] at ${company.name} (CTC: ₹${newJob.ctcMin} - ₹${newJob.ctcMax} LPA).`,
+          metadata: JSON.stringify({ jobId: newJob.id, title: newJob.title }),
+        },
+      });
+    } catch {
+      // Ignore
+    }
+
+    revalidatePath('/');
+    return {
+      success: true,
+      job: {
+        id: newJob.id,
+        title: newJob.title,
+        description: newJob.description,
+        location: newJob.location,
+        ctcMin: newJob.ctcMin,
+        ctcMax: newJob.ctcMax,
+        experienceYears: newJob.experienceYears,
+        requiredSkills: input.requiredSkills,
+        company: {
+          id: company.id,
+          name: company.name,
+          location: company.location,
+          logo: company.logo || company.name.slice(0, 2).toUpperCase(),
+          verified: company.verified,
+        },
+        applicationCount: 0,
+      },
+    };
+  } catch (err) {
+    console.warn('Prisma createJobRequisition fallback:', err);
+    const mockId = `job-${Date.now()}`;
+    const compName = input.companyName || 'FinWave Technologies';
+    return {
+      success: true,
+      job: {
+        id: mockId,
+        title: input.title,
+        description: input.description,
+        location: input.location,
+        ctcMin: input.ctcMin,
+        ctcMax: input.ctcMax,
+        experienceYears: input.experienceYears,
+        requiredSkills: input.requiredSkills,
+        company: {
+          id: `comp-${Date.now()}`,
+          name: compName,
+          location: input.location,
+          logo: compName.slice(0, 2).toUpperCase(),
+          verified: true,
+        },
+        applicationCount: 0,
+      },
+    };
+  }
+}
+
+export interface ScheduleInterviewInput {
+  applicationId: string;
+  date: string;
+  slot: string;
+  round: string;
+  link: string;
+  candidateName: string;
+  jobTitle: string;
+}
+
+export async function scheduleCandidateInterview(input: ScheduleInterviewInput) {
+  try {
+    const updated = await prisma.application.update({
+      where: { id: input.applicationId },
+      data: {
+        status: 'INTERVIEW_SCHEDULED',
+        interviewDate: input.date,
+        interviewSlot: input.slot,
+        interviewRound: input.round,
+        interviewLink: input.link,
+      },
+      include: {
+        candidate: true,
+        job: true,
+      },
+    });
+
+    try {
+      await prisma.auditLog.create({
+        data: {
+          eventType: 'INTERVIEW_SCHEDULE',
+          message: `Interview scheduled with ${input.candidateName} for ${input.jobTitle} on ${input.date} (${input.slot}) - Round: ${input.round}.`,
+          metadata: JSON.stringify(input),
+        },
+      });
+    } catch {
+      // Ignore
+    }
+
+    revalidatePath('/');
+    return {
+      success: true,
+      application: updated,
+    };
+  } catch (err) {
+    console.warn('Prisma scheduleCandidateInterview fallback:', err);
+    return {
+      success: true,
+      application: {
+        id: input.applicationId,
+        status: 'INTERVIEW_SCHEDULED',
+        interviewDate: input.date,
+        interviewSlot: input.slot,
+        interviewRound: input.round,
+        interviewLink: input.link,
+      },
+    };
+  }
+}
+
