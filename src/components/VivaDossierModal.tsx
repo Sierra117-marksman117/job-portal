@@ -426,7 +426,7 @@ class Application { +String id; +Job job; +JobSeeker candidate; +String status; 
           </span>
           <button
             onClick={onClose}
-            className="btn-press px-4 py-2 min-h-[38px] rounded-lg bg-slate-900 text-white font-bold hover:bg-slate-800 transition-colors"
+            className="btn-press px-4 py-2 min-h-[40px] rounded-lg bg-slate-900 text-white font-bold hover:bg-slate-800 transition-colors"
           >
             Close Dossier
           </button>

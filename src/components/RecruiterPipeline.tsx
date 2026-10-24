@@ -167,7 +167,7 @@ export function RecruiterPipeline({
             <button
               key={f.id}
               onClick={() => setActiveFilter(f.id)}
-              className={`px-3 py-1.5 rounded-lg font-medium transition-colors whitespace-nowrap text-xs min-h-[38px] flex items-center justify-center ${
+              className={`px-3 py-1.5 rounded-lg font-medium transition-colors whitespace-nowrap text-xs min-h-[40px] flex items-center justify-center ${
                 activeFilter === f.id
                   ? 'bg-slate-900 text-white font-bold'
                   : 'bg-slate-100 hover:bg-slate-200 text-slate-600'

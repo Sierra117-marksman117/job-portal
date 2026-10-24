@@ -796,7 +796,7 @@ export function MainWorkspace({
                         <button
                           onClick={handleApply}
                           disabled={isApplying || appliedJobIds.has(activeJob.id)}
-                          className={`btn-press px-5 py-2 min-h-[38px] font-bold rounded-lg text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-xs transition-colors ${
+                          className={`btn-press px-5 py-2 min-h-[40px] font-bold rounded-lg text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-xs transition-colors ${
                             appliedJobIds.has(activeJob.id)
                               ? 'bg-emerald-700 text-white pointer-events-none'
                               : 'bg-[#0a66c2] hover:bg-blue-700 text-white'
