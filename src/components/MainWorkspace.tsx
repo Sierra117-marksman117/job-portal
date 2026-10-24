@@ -930,7 +930,7 @@ export function MainWorkspace({
                 setShowTourBanner(false);
                 setIsTourOpen(true);
               }}
-              className="btn-press px-3 py-1 rounded-full bg-[#0a66c2] hover:bg-blue-600 font-bold text-white shadow-xs transition-colors text-xs"
+              className="btn-press min-h-[40px] px-3.5 py-1.5 rounded-full bg-[#0a66c2] hover:bg-blue-600 font-bold text-white shadow-xs transition-colors text-xs flex items-center justify-center"
             >
               Start Tour
             </button>
@@ -944,9 +944,9 @@ export function MainWorkspace({
                 }
               }}
               aria-label="Dismiss tour prompt"
-              className="p-1 rounded-full text-slate-400 hover:text-white transition-colors"
+              className="min-w-[40px] min-h-[40px] flex items-center justify-center p-2 rounded-full text-slate-400 hover:text-white transition-colors"
             >
-              <X className="w-3.5 h-3.5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
