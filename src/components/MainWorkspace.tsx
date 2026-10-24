@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar, Role } from './Navbar';
 import { JobCard, JobItem } from './JobCard';
 import { SkillMatrix } from './SkillMatrix';
@@ -11,6 +11,7 @@ import { RegisterModal, RegisteredUserResult } from './RegisterModal';
 import { CandidateProfileModal, CandidateProfile } from './CandidateProfileModal';
 import { PostJobModal } from './PostJobModal';
 import { VivaDossierModal } from './VivaDossierModal';
+import { GuidedTour } from './GuidedTour';
 import { applyToJob } from '@/app/actions';
 import { calculateSkillFit } from '@/lib/matching';
 import { useToast } from './Toast';
@@ -29,6 +30,8 @@ import {
   Share2,
   SlidersHorizontal,
   Zap,
+  Compass,
+  X,
 } from 'lucide-react';
 
 interface MainWorkspaceProps {
@@ -77,12 +80,32 @@ export function MainWorkspace({
   const [selectedJobId, setSelectedJobId] = useState<string>(initialJobs[0]?.id || 'job-1');
   const [activeNavTab, setActiveNavTab] = useState<string>('DISCOVER');
 
-  // Modals
+  // Modals & Interactive Guided Tour
   const [isResumeOpen, setIsResumeOpen] = useState<boolean>(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState<boolean>(false);
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
   const [isPostJobOpen, setIsPostJobOpen] = useState<boolean>(false);
   const [isVivaOpen, setIsVivaOpen] = useState<boolean>(false);
+  const [isTourOpen, setIsTourOpen] = useState<boolean>(false);
+  const [showTourBanner, setShowTourBanner] = useState<boolean>(false);
+
+  // Check if first-time visitor for interactive tour prompt
+  useEffect(() => {
+    let timer: NodeJS.Timeout | undefined;
+    try {
+      const dismissed = localStorage.getItem('talentgrid_tour_dismissed');
+      if (!dismissed) {
+        timer = setTimeout(() => {
+          setShowTourBanner(true);
+        }, 500);
+      }
+    } catch {
+      // In case localStorage is blocked
+    }
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
+  }, []);
 
   // Search & Multi-Filters (Naukri / Indeed style)
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -315,6 +338,7 @@ export function MainWorkspace({
         onOpenRegister={() => setIsRegisterOpen(true)}
         onOpenProfile={() => setIsProfileOpen(true)}
         onOpenViva={() => setIsVivaOpen(true)}
+        onStartTour={() => setIsTourOpen(true)}
         onOpenPostJob={() => setIsPostJobOpen(true)}
         customCandidateName={candidate.name}
         customRecruiterName={customRecruiterName}
@@ -427,7 +451,7 @@ export function MainWorkspace({
                   <div className="max-w-6xl mx-auto space-y-2.5">
                     
                     {/* Unified 3-Box Search Bar (Responsive: stacks gracefully on mobile & tablet) */}
-                    <div className="flex flex-col lg:flex-row items-stretch border border-slate-300 rounded-xl overflow-hidden shadow-2xs bg-white divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
+                    <div id="tour-search-bar" className="flex flex-col lg:flex-row items-stretch border border-slate-300 rounded-xl overflow-hidden shadow-2xs bg-white divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
                       
                       {/* Input 1: Keywords */}
                       <div className="flex-1 flex items-center px-3.5 py-1 min-h-[44px] bg-white">
@@ -642,7 +666,7 @@ export function MainWorkspace({
                           {/* Action Buttons Ribbon (LinkedIn / Indeed format) */}
                           <div className="flex flex-wrap items-center gap-2.5 pt-2">
                             <button
-                              id="btn-apply-job"
+                              id="tour-apply-btn"
                               onClick={handleApply}
                               disabled={isApplying || appliedJobIds.has(activeJob.id)}
                               className={`btn-press px-6 py-2.5 min-h-[42px] font-bold rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition-colors ${
@@ -703,11 +727,13 @@ export function MainWorkspace({
                         </div>
 
                         {/* LinkedIn "How you match" Component with Gap Adding */}
-                        <SkillMatrix
-                          job={activeJob}
-                          candidateName={candidate.name}
-                          onAddSkill={handleAddSkillFromGap}
-                        />
+                        <div id="tour-skill-matrix">
+                          <SkillMatrix
+                            job={activeJob}
+                            candidateName={candidate.name}
+                            onAddSkill={handleAddSkillFromGap}
+                          />
+                        </div>
 
                         {/* Naukri-style Benefits Pills */}
                         {activeJob.benefits && activeJob.benefits.length > 0 && (
@@ -875,6 +901,56 @@ export function MainWorkspace({
         isOpen={isVivaOpen}
         onClose={() => setIsVivaOpen(false)}
       />
+
+      {/* Interactive Step-by-Step Guided Website Tour */}
+      <GuidedTour
+        isOpen={isTourOpen}
+        onClose={() => {
+          setIsTourOpen(false);
+          try {
+            localStorage.setItem('talentgrid_tour_dismissed', 'true');
+          } catch {
+            // ignore
+          }
+        }}
+        currentRole={currentRole}
+        onRoleChange={setCurrentRole}
+      />
+
+      {/* First-Time Visitor Guide Banner Prompt */}
+      {showTourBanner && (
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 bg-slate-900 text-white rounded-full px-4 py-2 shadow-xl border border-slate-700 flex items-center gap-3 text-xs animate-in slide-in-from-bottom duration-300 max-w-[calc(100vw-24px)]">
+          <div className="flex items-center gap-1.5 font-medium truncate">
+            <Compass className="w-4 h-4 text-blue-400 shrink-0" />
+            <span className="truncate">New to TalentGrid? Take an interactive guided tour</span>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => {
+                setShowTourBanner(false);
+                setIsTourOpen(true);
+              }}
+              className="btn-press px-3 py-1 rounded-full bg-[#0a66c2] hover:bg-blue-600 font-bold text-white shadow-xs transition-colors text-xs"
+            >
+              Start Tour
+            </button>
+            <button
+              onClick={() => {
+                setShowTourBanner(false);
+                try {
+                  localStorage.setItem('talentgrid_tour_dismissed', 'true');
+                } catch {
+                  // ignore
+                }
+              }}
+              aria-label="Dismiss tour prompt"
+              className="p-1 rounded-full text-slate-400 hover:text-white transition-colors"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

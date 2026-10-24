@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Briefcase, FileText, UserPlus, GraduationCap, UserCheck, Bookmark, ClipboardList, PlusCircle } from 'lucide-react';
+import { Briefcase, FileText, UserPlus, GraduationCap, UserCheck, Bookmark, ClipboardList, PlusCircle, Compass } from 'lucide-react';
 import { NotificationCenter } from './NotificationCenter';
 
 export type Role = 'CANDIDATE' | 'RECRUITER' | 'ADMIN';
@@ -13,6 +13,7 @@ interface NavbarProps {
   onOpenRegister: () => void;
   onOpenProfile?: () => void;
   onOpenViva?: () => void;
+  onStartTour?: () => void;
   onOpenPostJob?: () => void;
   customCandidateName?: string;
   customRecruiterName?: string;
@@ -30,6 +31,7 @@ export function Navbar({
   onOpenRegister,
   onOpenProfile,
   onOpenViva,
+  onStartTour,
   onOpenPostJob,
   customCandidateName,
   customRecruiterName,
@@ -49,7 +51,7 @@ export function Navbar({
         
         {/* Brand & Main Links (Wraps cleanly without pushing viewport) */}
         <div className="w-full xl:w-auto flex flex-wrap items-center justify-between xl:justify-start gap-2.5 sm:gap-4">
-          <div className="flex items-center gap-2.5">
+          <div id="tour-brand" className="flex items-center gap-2.5">
             {/* LinkedIn/Naukri styled brand emblem */}
             <div className="w-9 h-9 rounded-lg bg-[#0a66c2] text-white flex items-center justify-center font-black text-sm tracking-tighter shadow-xs shrink-0">
               TG
@@ -69,17 +71,33 @@ export function Navbar({
             </div>
           </div>
 
-          {/* Academic Viva Button with WCAG 40px touch target */}
-          {onOpenViva && (
-            <button
-              onClick={onOpenViva}
-              className="btn-press min-h-[40px] flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-bold shadow-2xs transition-colors shrink-0"
-              title="Open Academic Viva Dossier & OOP Architecture"
-            >
-              <GraduationCap className="w-4 h-4 text-emerald-700" />
-              <span>Viva & OOPs</span>
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            {/* Academic Viva Button with WCAG 40px touch target */}
+            {onOpenViva && (
+              <button
+                id="tour-viva-btn"
+                onClick={onOpenViva}
+                className="btn-press min-h-[40px] flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-bold shadow-2xs transition-colors shrink-0"
+                title="Open Academic Viva Dossier & OOP Architecture"
+              >
+                <GraduationCap className="w-4 h-4 text-emerald-700" />
+                <span>Viva & OOPs</span>
+              </button>
+            )}
+
+            {/* Interactive Guided Tour Trigger */}
+            {onStartTour && (
+              <button
+                id="btn-start-tour"
+                onClick={onStartTour}
+                className="btn-press min-h-[40px] flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-50 hover:bg-blue-100 border border-blue-200 text-[#0a66c2] text-xs font-bold shadow-2xs transition-colors shrink-0"
+                title="Take an Interactive Guided Tour of the Platform"
+              >
+                <Compass className="w-4 h-4 text-[#0a66c2]" />
+                <span>Website Guide</span>
+              </button>
+            )}
+          </div>
 
           {/* Navigation Links per Role (LinkedIn/Naukri Tab Icons) */}
           <nav className="hidden 2xl:flex items-center gap-1 pl-4 border-l border-slate-200 text-xs font-medium text-slate-600">
@@ -136,7 +154,7 @@ export function Navbar({
         {/* Right Section: Persona Switcher, Notifications, Actions */}
         <div className="w-full xl:w-auto flex flex-wrap items-center justify-between xl:justify-end gap-1.5 sm:gap-2">
           {/* Persona Switcher Tabs with 40px touch targets */}
-          <div className="flex items-center justify-center p-1 rounded-xl bg-slate-100 border border-slate-200/80 text-xs">
+          <div id="tour-personas" className="flex items-center justify-center p-1 rounded-xl bg-slate-100 border border-slate-200/80 text-xs">
             <span className="hidden md:inline text-slate-500 text-[11px] px-2 font-medium select-none">
               Role:
             </span>
